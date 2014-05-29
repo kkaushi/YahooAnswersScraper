@@ -12,7 +12,9 @@ function getQuestionsForHealth($objDB,$offsetStart,$maxOffset){
 	{
 		// Form YQL query and build URI to YQL Web service
 		//$yql_query = "select * from answers.getbycategory(0,50) where category_id=396545018 and type=\"resolved\"";
-		$yql_query = "select * from answers.getbycategory(".$offsetCurr.",50) where category_id=396545018 and type=\"resolved\"";
+		$yql_query = "select * from answers.getbycategory(".$offsetCurr.",50) where category_id=396545018 and type=\"resolved\" and sort=\"date_asc\"";
+		//select * from answers.getbycategory(10000,50) where category_id=396545018 and type="resolved" and sort="date_asc"
+		
 		//echo $yql_query."<br>";
 		$yql_query_url = $BASE_URL . "?q=" . urlencode($yql_query) . "&format=json";	
 		
