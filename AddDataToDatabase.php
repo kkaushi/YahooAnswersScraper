@@ -32,6 +32,7 @@ function getQuestionsForHealth($objDB,$offsetStart,$maxOffset){
 				//getAllAnswers($objDB, $idCurr);
 				//echo '<br>'.$idCurr->id.'<br>';
 				getAllAnswers($objDB, $idCurr->id);
+				//getAllAnswers($objDB, "20140523144037AApXbqy");
 			}		
 		}
 	}	
@@ -66,13 +67,17 @@ function getAllAnswers($objDB,$qid){
     	//echo $phpObj->query->results->Question->Answers->Answer[0]->Content;
     	$objDB->insertRowInQuestionTable(
     			$phpObj->query->results->Question->id,
+    			$phpObj->query->results->Question->type,
     			$phpObj->query->results->Question->Subject,
     			$phpObj->query->results->Question->Content,
     			$phpObj->query->results->Question->Date,
     			$phpObj->query->results->Question->Timestamp,
     			$phpObj->query->results->Question->Link,
+    			$phpObj->query->results->Question->Category->id,
+    			$phpObj->query->results->Question->Category->content,
     			$phpObj->query->results->Question->UserId,
     			$phpObj->query->results->Question->UserNick,
+    			$phpObj->query->results->Question->UserPhotoURL,
     			$phpObj->query->results->Question->NumAnswers,
     			$phpObj->query->results->Question->NumComments,
     			$phpObj->query->results->Question->ChosenAnswer,
@@ -241,9 +246,9 @@ $phpTimeOut=$_POST["phpTimeOut"];
 
 set_time_limit($phpTimeOut);
 $YahooDB=new InterfaceService();
-//getQuestionsForHealth($YahooDB,$offsetStart,$offsetStart+$noOfQuestions);
+getQuestionsForHealth($YahooDB,$offsetStart,$offsetStart+$noOfQuestions);
 //$userId="6BZ4QZE6ZEAXED4NXLXR6HSS7A";
-getUserDetails($YahooDB);
+//getUserDetails($YahooDB);
 $YahooDB->closeConnection();
 
 ?>

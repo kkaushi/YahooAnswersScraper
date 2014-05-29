@@ -16,22 +16,21 @@
 			}
 			
 			//insert row queries 
-			public function insertRowInQuestionTable($q_id, $q_type, $q_subject, $q_content, $q_date, $q_timestamp, $q_link, $q_category_id, $q_category_content, $q_userId,$q_userNick,$q_userPhotoURL,$q_numAnswers,$q_numComments,$q_ChosenAnswer,$q_ChosenAnswererId,$q_ChosenAnswererNick,$q_ChosenAnswerTimestamp,$q_AnswerAwardTimestamp)
+			public function insertRowInQuestionTable($q_id, $q_subject, $q_content, $q_date, $q_timestamp, $q_link, $q_userId,$q_userNick,$q_numAnswers,$q_numComments,$q_ChosenAnswer,$q_AnswererId,$q_AnswererNick,$q_AnswerTimestamp,$q_AnswerAwardTimestamp)
 			{
 				//echo "<br><br>";
 				//echo $q_content;
 				$badChar=array("'");
 				$emptyStr="";
+				$q_content1=str_replace($badChar,$emptyStr, $q_content);
 				$q_subject1=str_replace($badChar,$emptyStr, $q_subject);
-				$q_content1=str_replace($badChar,$emptyStr, $q_content);				
-				$q_category_content1=str_replace($badChar,$emptyStr, $q_category_content);
-				$q_userNick1=str_replace($badChar,$emptyStr, $q_userNick);
 				$q_ChosenAnswer1=str_replace($badChar,$emptyStr, $q_ChosenAnswer);
-				$q_ChosenAnswererNick1=str_replace($badChar,$emptyStr, $q_ChosenAnswererNick);
+				$q_AnswererNick1=str_replace($badChar,$emptyStr, $q_AnswererNick);
+				$q_userNick1=str_replace($badChar,$emptyStr, $q_userNick);
 				//echo $q_content1;
 				//str_replace("'", "", $q_subject);
 				//echo "<br><br>";
-				$result=mysqli_query($this->connection,"Insert into questiontable values('$q_id','$q_type','$q_subject1','$q_content1','$q_date','$q_timestamp','$q_link','$q_category_id','$q_category_content1','$q_userId','$q_userNick1','$q_userPhotoURL','$q_numAnswers','$q_numComments','$q_ChosenAnswer1','$q_ChosenAnswererId','$q_ChosenAnswererNick1','$q_ChosenAnswerTimestamp','$q_AnswerAwardTimestamp')");
+				$result=mysqli_query($this->connection,"Insert into questiontable values('$q_id', '$q_subject1', '$q_content1', '$q_date', '$q_timestamp','$q_link','$q_userId','$q_userNick1',$q_numAnswers,$q_numComments,'$q_ChosenAnswer1','$q_AnswererId','$q_AnswererNick1','$q_AnswerTimestamp','$q_AnswerAwardTimestamp')");
 				if ( false===$result ) {
 					printf("error: %s\n", mysqli_error($this->connection));
 					echo $q_id."<br>";
