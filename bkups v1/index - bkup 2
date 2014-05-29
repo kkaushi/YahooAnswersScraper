@@ -1,0 +1,136 @@
+<html>  
+  <head>
+  <title>
+	Yahoo Health API
+  </title>  
+  <style type='text/css'>
+	#results{ width: 80%; margin-left: 10%; border: 1px solid gray; padding: 5px; height: 600px; overflow: auto; }   
+  </style>  
+  <script type='text/javascript'>  
+	var output='';
+    //further query to get question details
+	function question_details(ob){
+		//alert('hello');
+		var items = ob.query.results.Question;  
+		var q_id = items.id; 
+		var q_type = items.type;
+		var q_Subject = items.Subject;
+		var q_Content = items.Content;
+		var q_Date = items.Date;
+		var q_Timestamp = items.Timestamp;
+		var q_Link = items.Link;
+		var q_UserId = items.UserId;
+		var q_UserNick = items.UserNick;
+		var q_NumAnswers = items.NumAnswers;
+		var q_NumComments = items.NumComments;
+		var q_ChosenAnswererId = items.ChosenAnswererId;
+		var q_ChosenAnswererNick = items.ChosenAnswererNick;
+		var q_ChosenAnswer = items.ChosenAnswer;
+		output += 
+		"<p><h4> Question Id: " + q_id +"<br>Question Type: "+q_type+
+		"<br>Question Subject: "+q_Subject+
+		"<br> Date: "+q_Date+
+		"<br>Content: "+q_Content+
+		"<br>Timestamp: "+q_Timestamp+
+		"<br>Link: "+q_Link+
+		"<br>UserId: "+q_UserId+
+		"<br>User Nick: "+q_UserNick+
+		"<br>Num Answers: "+q_NumAnswers+
+		"<br>Num Comments: "+q_NumComments+
+		"<br><br>Chosen Answer: "+q_ChosenAnswer+
+		"<br>Chosen Answerer Id: "+q_ChosenAnswererId+
+		"<br>Chosen Answerer Nick: "+q_ChosenAnswererNick;
+		var answ = items.Answers.Answer;
+		for(var j=0;j<answ.length;j++){
+			var ans_Content=answ[j].Content;
+			var ans_Reference=answ[j].Reference;
+			var ans_Best=answ[j].Best;
+			var ans_UserId=answ[j].UserId;
+			var ans_UserNick=answ[j].UserNick;
+			var ans_Date=answ[j].Date;
+			var ans_Timestamp=answ[j].Timestamp;
+			output+=
+			"<br><br>Answer #"+(j+1)+" Details:"+
+			"<br>Content: "+ans_Content+
+			"<br>Reference: "+ans_Reference+
+			"<br>Best: "+ans_Best+
+			"<br>UserId: "+ans_UserId+
+			"<br>UserNick: "+ans_UserNick+
+			"<br>Date: "+ans_Date+
+			"<br>Timestamp: "+ans_Timestamp
+			"<br>";
+		}
+		output += "</h5></p><hr/>"; 		
+		//document.getElementById('results').innerHTML=output;			
+	}
+	// Parses returned response and extracts  
+    // the title, links, and text of each news story.  
+    function top_stories(o){  
+      var items = o.query.results.Question;  
+	  //items = o.query.results.Question;  
+      //var output = '';  
+	  //alert('inside top_stories');
+      var no_items=items.length;  
+	  //alert('in here');
+	  //var outp=document.getElementById('results').innerHTML;    				
+	  //alert(outp);
+      //for(var i=0;i<no_items;i++){  
+      for(var i=0;i<1;i++){  
+		var q_id = items[i].id;  
+		temp_str="<h5><p>"+q_id+"</p></h5>";
+		alert("bori");
+		document.getElementById('Id_questionId').innerHTML=temp_str;
+		//alert(q_id);
+        var subject = items[i].Subject;  
+        var date = items[i].Date;  
+		var question_details="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20answers.getquestion%20where%20question_id%3D%22"+q_id+"%22&format=json&diagnostics=true&callback=question_details";
+		var script_string="<script src=\""+question_details+"\"><\/script>";
+        //output += "<h3><a href='" + q_id + "'>"+subject+"</a></h3>" + content + "<hr/>";  		
+		//output += "<p><h4> Question Id:" + q_id +"<br>Date:"+date+"<br>Subject:"+subject+"</h5></p><hr/>";  
+		//if(i==0){
+			document.write(script_string);
+			//alert(script_string);
+		//}
+      }		
+      // Place news stories in div tag        
+	}  
+    <!--/script--> 
+
+  <!--script type='text/javascript'-->
+  //onload function
+  function Query_Answers(){
+  //alert('hello');
+	var getQuestionsScript="https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20answers.getbycategory(0%2C50)%20where%20category_id%3D396545018%20and%20type%3D%22resolved%22&format=json&diagnostics=true&callback=top_stories";
+	var script_getQuestions="<script src=\'"+getQuestionsScript+"\'><\/script>";
+	
+	//alert(script_getQuestions);
+	//for(var ctr=0;ctr<1;ctr++){
+		document.write(script_getQuestions);		
+		//document.getElementById('results').innerHTML=output;
+		alert(output);
+	//}
+	
+  }
+  </script>	
+   </head>  
+  
+  
+  
+  <body>  
+    <!-- Div tag for stories results -->  
+    <!-- button onclick="Query_Answers()">Run Query</button-->
+	<!-- div id='results'></div-->  
+	
+    <script src='
+https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20answers.getbycategory(0%2C50)%20where%20category_id%3D396545018%20and%20type%3D%22resolved%22&format=json&diagnostics=true&callback=top_stories'></script>
+<!-- script src='
+https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20answers.getbycategory(50%2C50)%20where%20category_id%3D396545018%20and%20type%3D%22resolved%22&format=json&diagnostics=true&callback=top_stories'></script> 
+	<!--script type='text/javascript'> alert('its done!');</script-->
+	<form action="AddDataToDatabase.php" method="post">	
+	<!-- Question Id:<input type="text" name="q_id" id="Id_questionId"-->
+	<div id='Id_questionId'>Hello</div>
+	<input type="submit" value="Submit">
+	</form>
+	
+	</body>  
+</html>  

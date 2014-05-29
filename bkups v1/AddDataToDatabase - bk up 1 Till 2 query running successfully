@@ -1,0 +1,96 @@
+<?php
+//Database Connection
+require_once 'databaseInterfaceService.php';
+require_once('XMLToArray.php');
+
+$BASE_URL = "https://query.yahooapis.com/v1/public/yql";
+
+function getQuestionsForHealth(){
+	
+	$yql_query = "select * from answers.getquestion where question_id=\"".$qid."\"";
+	$yql_query_url = $BASE_URL . "?q=" . urlencode($yql_query) . "&format=json";	
+}
+function getAllAnswers($objDB,$qid){
+	
+				
+	// Form YQL query and build URI to YQL Web service
+    $yql_query = "select * from answers.getquestion where question_id=\"".$qid."\"";
+	$yql_query_url = $BASE_URL . "?q=" . urlencode($yql_query) . "&format=json";
+    
+    // Make call with cURL
+    $session = curl_init($yql_query_url);
+    curl_setopt($session, CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($session, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($session, CURLOPT_SSL_VERIFYHOST,  2);
+    $json = curl_exec($session);
+    
+    // Convert JSON to PHP object
+    $phpObj =  json_decode($json);
+    
+    echo '<br><br>------------New values--------------------<br><br>';
+	
+    //Confirm that results were returned before parsing
+    if(!is_null($phpObj->query->results)){
+    	//echo 'true';
+    	//echo $phpObj->query->results->Question->Answers->Answer[0]->Content;
+    	foreach ($phpObj->query->results->Question->Answers->Answer as $objCurr){
+    		//echo $objCurr->Content."<br><br>";
+    		/*echo $objCurr->Content."<br><br>".$objCurr->Reference."<br><br>".
+    				$objCurr->Best."<br><br>".
+    				$objCurr->UserId."<br><br>".
+    				$objCurr->UserNick."<br><br>".
+    				$objCurr->Date."<br><br>".
+    				$objCurr->Timestamp."<br><br>=======================================<br>";*/
+    		$objDB->insertRowInAnswersTable(
+    				$phpObj->query->results->Question->id,
+    				$objCurr->Content,
+    				$objCurr->Reference,
+    				$objCurr->Best,
+    				$objCurr->UserId,
+    				$objCurr->UserNick,
+    				$objCurr->Date,
+    				$objCurr->Timestamp
+    				);
+    	}    	
+    }
+}
+
+
+$YahooDB=new InterfaceService();
+$qid=$_POST["q_id"];
+echo $qid;
+echo "<br><br>";
+$qContent= $_POST["q_content"];
+echo $qContent;
+echo "<br><br>";
+$qSubject= $_POST["q_subject"];
+echo $qSubject;
+echo "<br><br>";
+$qdate = $_POST["q_date"];
+echo $qdate;
+echo "<br><br>";
+$qTimestamp = $_POST["q_timestamp"];
+echo $qTimestamp;
+echo "<br><br>";
+$qlink=$_POST["q_link"];
+echo $qlink;
+echo "<br><br>";
+$quserId= $_POST["q_userId"];
+echo $quserId;
+echo "<br><br>";
+$quserNick=$_POST["q_userNick"];
+echo $quserNick;
+echo "<br><br>";
+$qnumAnswers= $_POST["q_numAnswers"];
+echo $qnumAnswers;
+echo "<br><br>";
+$qnumComments= $_POST["q_numComment"];
+echo $qnumComments;
+//$YahooDB->insertRowInQuestionTable($qid,$qSubject,$qContent,$qdate,$qTimestamp,$qlink,$quserId,$quserNick,$qnumAnswers,$qnumComments);
+//$YahooDB->getAllInterface();
+//get User Data
+getAllAnswers($YahooDB,$qid);
+$YahooDB->closeConnection();
+
+?>
+
